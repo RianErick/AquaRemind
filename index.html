@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AquaRemind — Simulador da Tampa Inteligente</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div>
+        <span class="eyebrow">PROTÓTIPO INTERATIVO • IFCE</span>
+        <h1>AquaRemind</h1>
+        <p>Tampa inteligente para acompanhar sua hidratação.</p>
+      </div>
+      <div class="system-status"><span class="pulse"></span> SISTEMA ATIVO</div>
+    </header>
+
+    <section class="hero-grid">
+      <article class="bottle-card panel">
+        <div class="bottle-scene" aria-label="Garrafa virtual">
+          <div class="cap"><span></span><span></span></div>
+          <div class="bottle">
+            <div id="water" class="water"><div class="wave"></div></div>
+            <div class="bottle-glare"></div>
+            <div class="volume-readout"><strong id="current-volume">800</strong><small>ml na garrafa</small></div>
+          </div>
+        </div>
+        <div class="bottle-actions">
+          <button id="drink" class="primary"><span>−200 ml</span> Simular gole</button>
+          <button id="refill" class="secondary"><span>+200 ml</span> Reabastecer</button>
+        </div>
+      </article>
+
+      <section class="dashboard">
+        <div class="metric-grid">
+          <article class="metric panel accent">
+            <span>Consumido hoje</span>
+            <strong><b id="consumed">0</b> <small>ml</small></strong>
+            <div class="progress"><i id="goal-progress"></i></div>
+            <small id="goal-label">0% da meta de 2.000 ml</small>
+          </article>
+          <article class="metric panel">
+            <span>Temperatura</span>
+            <strong><b id="temperature">24</b><small>°C</small></strong>
+            <small id="temperature-label">Água em temperatura ambiente</small>
+          </article>
+          <article class="metric panel countdown-card">
+            <span>Próximo lembrete</span>
+            <strong id="countdown">30:00</strong>
+            <small id="timer-state">Contando desde o último gole</small>
+          </article>
+        </div>
+
+        <article class="panel controls">
+          <div class="section-heading">
+            <div><span class="eyebrow">CONFIGURAÇÕES</span><h2>Rotina de hidratação</h2></div>
+            <button id="advance" class="ghost">Avançar 5 min</button>
+          </div>
+
+          <label>Intervalo entre lembretes</label>
+          <div class="segmented" role="group" aria-label="Intervalo">
+            <button data-interval="30" class="active">30 min</button>
+            <button data-interval="40">40 min</button>
+            <button data-interval="60">60 min</button>
+          </div>
+
+          <div class="range-row">
+            <label for="temp-range">Temperatura da água <b id="temp-value">24 °C</b></label>
+            <input id="temp-range" type="range" min="4" max="60" value="24">
+            <div class="range-labels"><span>Gelada</span><span>Ambiente</span><span>Quente</span></div>
+          </div>
+
+          <div class="switch-row">
+            <div><strong>Modo apresentação</strong><small>1 segundo representa 1 minuto</small></div>
+            <button id="speed-toggle" class="switch active" aria-pressed="true"><i></i></button>
+          </div>
+        </article>
+
+        <article id="alert" class="alert panel" aria-live="polite">
+          <div class="alert-icon">✓</div>
+          <div><strong>Tudo certo</strong><span>Beba 200 ml quando o contador chegar a zero.</span></div>
+          <button id="snooze">Adiar 10 min</button>
+        </article>
+      </section>
+    </section>
+
+    <section class="panel hardware-lab">
+      <div class="section-heading">
+        <div><span class="eyebrow">CIRCUITO EM TEMPO REAL</span><h2>Componentes da tampa inteligente</h2></div>
+        <span class="hardware-hint">Passe o mouse para ver a ligação</span>
+      </div>
+      <div class="circuit-stage">
+        <div class="component esp32" data-detail="ESP32 DevKit C — processa os sensores, controla o OLED e decide quando alertar.">
+          <div class="usb-port"></div><b>ESP32</b><small>DevKit C</small><i class="chip"></i>
+          <span class="pin p1">GPIO5/18</span><span class="pin p2">GPIO4</span><span class="pin p3">GPIO21/22</span><span class="pin p4">GPIO26/27</span>
+        </div>
+        <div class="component sonar" data-detail="HC-SR04 — mede a distância até a água e permite calcular o volume atual.">
+          <span class="eye"></span><span class="eye"></span><b>HC-SR04</b><small id="hw-volume">800 ml</small>
+        </div>
+        <div class="component probe" data-detail="DS18B20 — sonda impermeável que mede a temperatura da água.">
+          <i></i><b>DS18B20</b><small id="hw-temp">24 °C</small>
+        </div>
+        <div class="component oled" data-detail="OLED SSD1306 — mostra volume, temperatura, meta diária e próximo lembrete.">
+          <div class="mini-screen"><b id="hw-oled-volume">800ml</b><span id="hw-oled-timer">30min</span></div><small>OLED SSD1306</small>
+        </div>
+        <div class="component actuator" data-detail="LED e buzzer — fazem o alerta visual e sonoro quando o contador chega a zero.">
+          <i id="hw-led"></i><span class="speaker">)))</span><b>LED + BUZZER</b><small id="hw-alert">Em espera</small>
+        </div>
+        <div class="component button-part" data-detail="Botão — permite adiar o lembrete ou confirmar manualmente um gole.">
+          <i></i><b>BOTÃO</b><small>Soneca / confirmar</small>
+        </div>
+        <svg class="wires" viewBox="0 0 1000 390" preserveAspectRatio="none" aria-hidden="true">
+          <path class="wire sensor-wire" d="M500 185 C400 90 270 80 170 80"/><path class="wire temp-wire" d="M500 205 C390 280 280 310 165 310"/>
+          <path class="wire screen-wire" d="M570 180 C690 85 785 75 860 80"/><path class="wire alert-wire" d="M580 215 C700 220 775 220 855 220"/>
+          <path class="wire button-wire" d="M555 235 C690 310 775 320 860 320"/>
+        </svg>
+      </div>
+      <div id="component-detail" class="component-detail">O ESP32 recebe as leituras e coordena todo o sistema.</div>
+      <div class="pin-map">
+        <span><b>HC-SR04</b> GPIO5 / GPIO18</span><span><b>DS18B20</b> GPIO4</span><span><b>OLED</b> GPIO21 / GPIO22</span><span><b>LED</b> GPIO26</span><span><b>Buzzer</b> GPIO27</span><span><b>Botão</b> GPIO14</span>
+      </div>
+    </section>
+
+    <section class="lower-grid">
+      <article class="panel timeline-card">
+        <div class="section-heading"><div><span class="eyebrow">EVENTOS</span><h2>Histórico da simulação</h2></div><button id="reset" class="ghost danger">Reiniciar dia</button></div>
+        <ol id="timeline" class="timeline"></ol>
+      </article>
+      <article class="panel logic-card">
+        <span class="eyebrow">COMO FUNCIONA</span>
+        <h2>Da garrafa ao alerta</h2>
+        <div class="logic-flow">
+          <div><b>01</b><span>HC-SR04 mede o nível</span></div><i>→</i>
+          <div><b>02</b><span>ESP32 calcula o volume</span></div><i>→</i>
+          <div><b>03</b><span>OLED mostra os dados</span></div><i>→</i>
+          <div><b>04</b><span>LED e buzzer alertam</span></div>
+        </div>
+      </article>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
