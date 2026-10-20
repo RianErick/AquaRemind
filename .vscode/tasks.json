@@ -1,0 +1,24 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "AquaRemind: compilar",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/build.sh",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": "$platformio"
+    },
+    {
+      "label": "AquaRemind: gravar no ESP32",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/upload.sh",
+      "problemMatcher": "$platformio"
+    },
+    {
+      "label": "AquaRemind: exportar modelo 3D",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/export-3d.sh",
+      "problemMatcher": []
+    }
+  ]
+}

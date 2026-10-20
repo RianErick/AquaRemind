@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "author": "Equipe AquaRemind",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 20, "left": 20, "attrs": {} },
+    { "type": "wokwi-hc-sr04", "id": "sonar", "top": -120, "left": 330, "attrs": { "distance": "4" } },
+    { "type": "wokwi-ds18b20", "id": "temp", "top": 125, "left": 365, "attrs": { "temperature": "24" } },
+    { "type": "board-ssd1306", "id": "oled", "top": -120, "left": -260, "attrs": { "i2cAddress": "0x3c" } },
+    { "type": "wokwi-buzzer", "id": "buzzer", "top": 300, "left": 320, "attrs": { "volume": "0.35" } },
+    { "type": "wokwi-led", "id": "led", "top": 280, "left": -210, "attrs": { "color": "blue", "label": "Lembrete" } },
+    { "type": "wokwi-resistor", "id": "rled", "top": 278, "left": -115, "rotate": 90, "attrs": { "value": "220" } },
+    { "type": "wokwi-pushbutton", "id": "button", "top": 165, "left": -255, "attrs": { "color": "green", "label": "Soneca / confirmar" } },
+    { "type": "wokwi-pushbutton", "id": "drinkSim", "top": 385, "left": -250, "attrs": { "color": "blue", "label": "BEBER 200 ml (tecla D)", "key": "D", "bounce": "0" } },
+    { "type": "wokwi-pushbutton", "id": "refillSim", "top": 385, "left": -60, "attrs": { "color": "cyan", "label": "REABASTECER (tecla R)", "key": "R", "bounce": "0" } },
+    { "type": "wokwi-slide-potentiometer", "id": "intervalPot", "top": 375, "left": 165, "attrs": { "value": "0", "travelLength": "60" } },
+    { "type": "wokwi-text", "id": "title", "top": -185, "left": -255, "attrs": { "text": "AQUAREMIND - TAMPA INTELIGENTE\nUse os controles abaixo durante a simulacao" } },
+    { "type": "wokwi-text", "id": "drinkHelp", "top": 350, "left": -250, "attrs": { "text": "SIMULAR CONSUMO" } },
+    { "type": "wokwi-text", "id": "refillHelp", "top": 350, "left": -55, "attrs": { "text": "SIMULAR RECARGA" } },
+    { "type": "wokwi-text", "id": "intervalHelp", "top": 340, "left": 155, "attrs": { "text": "INTERVALO\n30     40     60 min" } },
+    { "type": "wokwi-text", "id": "demoHelp", "top": 480, "left": -250, "attrs": { "text": "MODO APRESENTACAO: 1 segundo = 1 minuto\nOLED: volume | temperatura | meta | proximo lembrete" } },
+    { "type": "wokwi-resistor", "id": "rtemp", "top": 118, "left": 295, "rotate": 90, "attrs": { "value": "4700" } }
+  ],
+  "connections": [
+    [ "esp:5V", "sonar:VCC", "red", [] ],
+    [ "esp:GND.1", "sonar:GND", "black", [] ],
+    [ "esp:5", "sonar:TRIG", "green", [] ],
+    [ "esp:18", "sonar:ECHO", "blue", [] ],
+
+    [ "esp:3V3", "temp:VCC", "red", [] ],
+    [ "esp:GND.2", "temp:GND", "black", [] ],
+    [ "esp:4", "temp:DQ", "green", [] ],
+    [ "temp:DQ", "rtemp:1", "green", [] ],
+    [ "rtemp:2", "temp:VCC", "red", [] ],
+
+    [ "esp:3V3", "oled:VCC", "red", [] ],
+    [ "esp:GND.1", "oled:GND", "black", [] ],
+    [ "esp:21", "oled:SDA", "green", [] ],
+    [ "esp:22", "oled:SCL", "blue", [] ],
+
+    [ "esp:27", "buzzer:1", "orange", [] ],
+    [ "esp:GND.2", "buzzer:2", "black", [] ],
+    [ "esp:26", "rled:1", "blue", [] ],
+    [ "rled:2", "led:A", "blue", [] ],
+    [ "led:C", "esp:GND.1", "black", [] ],
+    [ "esp:14", "button:1.l", "green", [] ],
+    [ "button:2.l", "esp:GND.1", "black", [] ],
+    [ "esp:32", "drinkSim:1.l", "blue", [] ],
+    [ "drinkSim:2.l", "esp:GND.1", "black", [] ],
+    [ "esp:33", "refillSim:1.l", "cyan", [] ],
+    [ "refillSim:2.l", "esp:GND.1", "black", [] ],
+    [ "esp:34", "intervalPot:SIG", "yellow", [] ],
+    [ "esp:3V3", "intervalPot:VCC", "red", [] ],
+    [ "esp:GND.1", "intervalPot:GND", "black", [] ]
+  ],
+  "serialMonitor": {
+    "display": "always",
+    "newline": "lf"
+  }
+}
