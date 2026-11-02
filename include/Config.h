@@ -5,7 +5,7 @@
 #endif
 namespace Config {
 namespace Pins {
-constexpr uint8_t TRIGGER=5, ECHO=18, TEMPERATURE=4, LED=26, BUZZER=27, BUTTON=14;
+constexpr uint8_t TRIGGER=5, ECHO=18, TEMPERATURE=4, LED=26, VIBRATION_MOTOR=27, BUTTON=14;
 constexpr uint8_t SIMULATE_DRINK=32, SIMULATE_REFILL=33, SIMULATE_INTERVAL=34;
 constexpr uint8_t OLED_SDA=21, OLED_SCL=22;
 }

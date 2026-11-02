@@ -9,7 +9,7 @@ Hardware::Hardware(): display_(128,64,&Wire,-1), oneWire_(Config::Pins::TEMPERAT
 
 void Hardware::begin() {
   pinMode(Config::Pins::TRIGGER,OUTPUT); pinMode(Config::Pins::ECHO,INPUT);
-  pinMode(Config::Pins::LED,OUTPUT); pinMode(Config::Pins::BUZZER,OUTPUT);
+  pinMode(Config::Pins::LED,OUTPUT); pinMode(Config::Pins::VIBRATION_MOTOR,OUTPUT);
   pinMode(Config::Pins::BUTTON,INPUT_PULLUP);
   pinMode(Config::Pins::SIMULATE_DRINK,INPUT_PULLUP);
   pinMode(Config::Pins::SIMULATE_REFILL,INPUT_PULLUP);
@@ -36,17 +36,16 @@ float Hardware::readTemperatureC(float fallback) {
   temperatureSensor_.requestTemperatures(); const float value=temperatureSensor_.getTempCByIndex(0);
   return value>-55.0f && value<125.0f ? value : fallback;
 }
-void Hardware::setBuzzerFrequency(uint16_t value) {
-  if (value == currentBuzzerFrequency_) return;
-  currentBuzzerFrequency_ = value;
-  if (!value) noTone(Config::Pins::BUZZER); else tone(Config::Pins::BUZZER,value);
+void Hardware::stopReminderOutputs() {
+  digitalWrite(Config::Pins::LED,LOW);
+  digitalWrite(Config::Pins::VIBRATION_MOTOR,LOW);
 }
-void Hardware::stopReminderOutputs() { digitalWrite(Config::Pins::LED,LOW); setBuzzerFrequency(0); }
-void Hardware::updateReminderSound(bool enabled) {
+void Hardware::updateVibrationAlert(bool enabled) {
   if (!enabled) return;
-  const uint32_t phase=millis()%2000; uint16_t frequency=0;
-  if (phase<180) frequency=1760; else if (phase>=300&&phase<500) frequency=2217; else if (phase>=620&&phase<880) frequency=2637;
-  setBuzzerFrequency(frequency); digitalWrite(Config::Pins::LED,frequency ? HIGH : LOW);
+  const uint32_t phase=millis()%2000;
+  const bool vibrating=phase<220 || (phase>=360&&phase<580) || (phase>=720&&phase<940);
+  digitalWrite(Config::Pins::VIBRATION_MOTOR,vibrating ? HIGH : LOW);
+  digitalWrite(Config::Pins::LED,vibrating ? HIGH : LOW);
 }
 void Hardware::render(const Measurements &d,AppMode mode,uint32_t remainingMs,bool demo) {
   display_.clearDisplay(); display_.setTextColor(SSD1306_WHITE); display_.setTextSize(1);

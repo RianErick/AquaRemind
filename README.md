@@ -19,7 +19,7 @@ O painel permite simular goles de 200 ml, reabastecimento, intervalos de 30/40/6
 - leitura do DS18B20;
 - OLED com volume, temperatura, meta e temporizador;
 - detecção de gole e reabastecimento por delta de 30 ml;
-- lembrete com LED e sequência sonora de três tons crescentes;
+- lembrete com LED e três pulsos de vibração;
 - clique curto para soneca e clique longo para confirmação;
 - função `notify()` representada no Monitor Serial;
 - modelo 3D conceitual com tampa do sensor, caixa lateral e tampa traseira.
@@ -69,7 +69,7 @@ include/
 src/
 ├── main.cpp           # entrada mínima do Arduino
 ├── AppState.cpp       # nomes dos estados
-├── Hardware.cpp       # OLED, sensores, LED e buzzer
+├── Hardware.cpp       # OLED, sensores, LED e motor vibratório
 └── AquaRemindApp.cpp  # regras, botões e máquina de estados
 ```
 
@@ -98,7 +98,7 @@ O modelo é deliberadamente conceitual: serve para apresentação e para demonst
 | DS18B20 DQ | GPIO4 |
 | OLED SDA | GPIO21 |
 | OLED SCL | GPIO22 |
-| Buzzer | GPIO27 |
+| Motor vibratório | GPIO27 |
 | LED | GPIO26 |
 | Botão | GPIO14 |
 

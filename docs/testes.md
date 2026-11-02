@@ -4,7 +4,7 @@ O projeto vem configurado com `DEMO_MODE=1`: cada segundo representa um minuto. 
 
 ## T01 - Funcionamento normal
 
-Inicie a simulação. O OLED deve mostrar volume, temperatura, meta e tempo sem gole. O LED e o buzzer ficam desligados.
+Inicie a simulação. O OLED deve mostrar volume, temperatura, meta e tempo sem gole. O LED e o indicador de vibração ficam desligados.
 
 ## T02 - Gole
 
@@ -16,7 +16,7 @@ Pressione o botão ciano **Reabastecer +200 ml**. O volume sobe e a meta diária
 
 ## T04 - Lembrete
 
-Escolha 30 minutos no controle deslizante amarelo e aguarde 30 segundos no modo de demonstração. LED e buzzer são ligados e o Monitor Serial registra a notificação.
+Escolha 30 minutos no controle deslizante amarelo e aguarde 30 segundos no modo de demonstração. O LED e o indicador do motor vibratório pulsam três vezes, e o Monitor Serial registra a notificação.
 
 ## T05 - Líquido quente
 

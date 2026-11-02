@@ -8,7 +8,7 @@ void AquaRemindApp::setup() {
 void AquaRemindApp::loop() {
   const uint32_t now=millis(); handleMainButton(now); handleSimulationControls(now);
   if (now-lastSampleMs_>=Config::Timing::SAMPLE_MS) { lastSampleMs_=now; processMeasurements(); }
-  updateStateMachine(now); hardware_.updateReminderSound(reminderOutputsEnabled_);
+  updateStateMachine(now); hardware_.updateVibrationAlert(reminderOutputsEnabled_);
   if (now-lastDisplayMs_>=Config::Timing::DISPLAY_MS) {
     lastDisplayMs_=now; hardware_.render(measurements_,mode_,reminderRemainingMs(now),DEMO_MODE);
   }

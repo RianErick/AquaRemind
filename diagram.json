@@ -11,10 +11,11 @@
 
     { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": -100, "left": -20, "attrs": {} },
 
-    { "type": "board-ssd1306", "id": "oled", "top": -155, "left": 260, "attrs": { "i2cAddress": "0x3c" } },
+    { "type": "board-ssd1306", "id": "oled", "top": 220, "left": 35, "attrs": { "i2cAddress": "0x3c" } },
     { "type": "wokwi-led", "id": "led", "top": 45, "left": 330, "attrs": { "color": "blue", "label": "LEMBRETE" } },
     { "type": "wokwi-resistor", "id": "rled", "top": 46, "left": 245, "rotate": 90, "attrs": { "value": "220" } },
-    { "type": "wokwi-buzzer", "id": "buzzer", "top": 145, "left": 300, "attrs": { "volume": "0.35" } },
+    { "type": "wokwi-led", "id": "vibration", "top": 145, "left": 330, "attrs": { "color": "purple", "label": "MOTOR VIBRATORIO (simulado)" } },
+    { "type": "wokwi-resistor", "id": "rvibration", "top": 146, "left": 245, "rotate": 90, "attrs": { "value": "220" } },
     { "type": "wokwi-pushbutton", "id": "button", "top": 245, "left": 275, "attrs": { "color": "green", "label": "SONECA / CONFIRMAR" } },
 
     { "type": "wokwi-text", "id": "controlsTitle", "top": 350, "left": -330, "attrs": { "text": "CONTROLES DA DEMONSTRACAO" } },
@@ -36,16 +37,17 @@
     [ "temp:DQ", "rtemp:1", "green", [ "v-20", "h45" ] ],
     [ "rtemp:2", "temp:VCC", "red", [ "v25", "h-45" ] ],
 
-    [ "esp:3V3", "oled:VCC", "red", [ "h55", "v-120", "h125" ] ],
-    [ "esp:GND.1", "oled:GND", "black", [ "h70", "v-95", "h110" ] ],
-    [ "esp:21", "oled:SDA", "green", [ "h85", "v-70", "h95" ] ],
-    [ "esp:22", "oled:SCL", "blue", [ "h100", "v-45", "h80" ] ],
+    [ "esp:3V3", "oled:VCC", "red", [] ],
+    [ "esp:GND.1", "oled:GND", "black", [] ],
+    [ "esp:21", "oled:SDA", "green", [] ],
+    [ "esp:22", "oled:SCL", "blue", [] ],
 
     [ "esp:26", "rled:1", "blue", [ "h75", "v35", "h70" ] ],
     [ "rled:2", "led:A", "blue", [ "h35" ] ],
     [ "led:C", "esp:GND.1", "black", [ "v55", "h-105", "v-25", "h-95" ] ],
-    [ "esp:27", "buzzer:1", "orange", [ "h95", "v145", "h70" ] ],
-    [ "esp:GND.2", "buzzer:2", "black", [ "h70", "v170", "h95" ] ],
+    [ "esp:27", "rvibration:1", "purple", [ "h95", "v145", "h70" ] ],
+    [ "rvibration:2", "vibration:A", "purple", [ "h35" ] ],
+    [ "vibration:C", "esp:GND.2", "black", [ "v45", "h-105", "v-20", "h-95" ] ],
     [ "esp:14", "button:1.l", "green", [ "h80", "v225", "h85" ] ],
     [ "button:2.l", "esp:GND.1", "black", [ "h-30", "v-40", "h-120", "v-160" ] ],
 
