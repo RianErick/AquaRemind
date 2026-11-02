@@ -56,6 +56,25 @@ O script cria uma instalação isolada do PlatformIO em `.venv`, baixa as biblio
 
 O `diagram.json` contém todos os componentes e conexões. O `wokwi.toml` aponta para o firmware gerado pelo PlatformIO.
 
+## Organização do firmware
+
+O código foi separado por responsabilidade para facilitar manutenção e apresentação:
+
+```text
+include/
+├── Config.h           # pinagem, dimensões e tempos
+├── AppState.h         # estados e medições da aplicação
+├── Hardware.h         # interface dos sensores e atuadores
+└── AquaRemindApp.h    # controle principal
+src/
+├── main.cpp           # entrada mínima do Arduino
+├── AppState.cpp       # nomes dos estados
+├── Hardware.cpp       # OLED, sensores, LED e buzzer
+└── AquaRemindApp.cpp  # regras, botões e máquina de estados
+```
+
+No Wokwi, os componentes estão agrupados em sensores, controle central, alertas/interface e controles de demonstração. Os fios seguem corredores externos para não encobrir o LED nem os demais componentes.
+
 ## Comandos úteis
 
 ```bash
