@@ -1,0 +1,13 @@
+name: 'CT04 - UC02: subida de nivel no sensor conta como reabastecimento e nao altera a meta'
+version: 1
+author: 'Equipe AquaRemind'
+
+steps:
+  - wait-serial: 'Sistema iniciado em modo demonstracao.'
+  - wait-serial: 'meta=0ml'
+  - set-control: { part-id: sonar, control: distance, value: 8 }
+  - wait-serial: 'Gole detectado'
+  - wait-serial: 'meta=208ml'
+  - set-control: { part-id: sonar, control: distance, value: 4 }
+  - wait-serial: 'Reabastecimento detectado.'
+  - wait-serial: 'volume=798ml temp=24.0C meta=208ml'

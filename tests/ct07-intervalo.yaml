@@ -1,0 +1,13 @@
+name: 'CT07 - UC03: controle deslizante muda o intervalo para 40 min'
+version: 1
+author: 'Equipe AquaRemind'
+
+steps:
+  - wait-serial: 'Sistema iniciado em modo demonstracao.'
+  - wait-serial: 'estado=MONITORANDO'
+  - set-control: { part-id: intervalPot, control: position, value: 0.5 }
+  - wait-serial: 'Novo intervalo: 40 minutos.'
+  - delay: 36000ms
+  - wait-serial: 'estado=MONITORANDO'
+  - expect-pin: { part-id: vibration, pin: A, value: 0 }
+  - wait-serial: 'Hora de beber agua.'

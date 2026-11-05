@@ -1,0 +1,14 @@
+name: 'CT02 - UC02: queda de nivel no sensor conta como gole'
+version: 1
+author: 'Equipe AquaRemind'
+
+steps:
+  - wait-serial: 'Sistema iniciado em modo demonstracao.'
+  - wait-serial: 'meta=0ml'
+  - set-control: { part-id: sonar, control: distance, value: 8 }
+  - wait-serial: 'Gole detectado; temporizador reiniciado.'
+  - wait-serial: 'distancia=8.3cm volume=590ml'
+  - wait-serial: 'meta=208ml'
+  - take-screenshot:
+      part-id: oled
+      save-to: evidencias/ct02-gole-sensor.png

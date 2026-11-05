@@ -1,0 +1,15 @@
+name: 'CT10 - UC07: segurar o botao confirma o consumo e encerra o lembrete'
+version: 1
+author: 'Equipe AquaRemind'
+
+steps:
+  - wait-serial: 'Sistema iniciado em modo demonstracao.'
+  - wait-serial: 'Hora de beber agua.'
+  - set-control: { part-id: button, control: pressed, value: 1 }
+  - delay: 1500ms
+  - set-control: { part-id: button, control: pressed, value: 0 }
+  - wait-serial: 'Consumo confirmado pelo botao; temporizador reiniciado.'
+  - expect-pin: { part-id: vibration, pin: A, value: 0 }
+  - expect-pin: { part-id: led, pin: A, value: 0 }
+  - wait-serial: 'estado=MONITORANDO'
+  - wait-serial: 'meta=0ml'

@@ -1,0 +1,11 @@
+name: 'CT03 - UC02: variacao abaixo de 30 ml nao conta como gole'
+version: 1
+author: 'Equipe AquaRemind'
+
+steps:
+  - wait-serial: 'Sistema iniciado em modo demonstracao.'
+  - wait-serial: 'meta=0ml'
+  - set-control: { part-id: sonar, control: distance, value: 4.4 }
+  - wait-serial: 'distancia=4.6cm'
+  - wait-serial: 'meta=0ml'
+  - wait-serial: 'estado=MONITORANDO'

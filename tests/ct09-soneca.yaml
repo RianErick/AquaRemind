@@ -1,0 +1,18 @@
+name: 'CT09 - UC07: clique curto no lembrete ativa soneca de 15 min (15 s no modo demo)'
+version: 1
+author: 'Equipe AquaRemind'
+
+steps:
+  - wait-serial: 'Sistema iniciado em modo demonstracao.'
+  - wait-serial: 'Hora de beber agua.'
+  - set-control: { part-id: button, control: pressed, value: 1 }
+  - delay: 300ms
+  - set-control: { part-id: button, control: pressed, value: 0 }
+  - wait-serial: 'Soneca ativada.'
+  - expect-pin: { part-id: led, pin: A, value: 0 }
+  - expect-pin: { part-id: vibration, pin: A, value: 0 }
+  - wait-serial: 'estado=SONECA'
+  - delay: 5000ms
+  - expect-pin: { part-id: vibration, pin: A, value: 0 }
+  - wait-serial: 'Soneca encerrada: hora de beber agua.'
+  - wait-serial: 'estado=LEMBRETE'

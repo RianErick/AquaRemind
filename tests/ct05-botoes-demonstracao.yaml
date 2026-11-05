@@ -1,0 +1,21 @@
+name: 'CT05 - UC02/UC04: botoes da demonstracao alteram volume e meta'
+version: 1
+author: 'Equipe AquaRemind'
+
+steps:
+  - wait-serial: 'Sistema iniciado em modo demonstracao.'
+  - wait-serial: 'estado=MONITORANDO'
+  - set-control: { part-id: drinkSim, control: pressed, value: 1 }
+  - wait-serial: 'Gole detectado; temporizador reiniciado.'
+  - wait-serial: 'restam 598 ml'
+  - set-control: { part-id: drinkSim, control: pressed, value: 0 }
+  - delay: 300ms
+  - wait-serial: 'volume=598ml temp=24.0C meta=200ml'
+  - take-screenshot:
+      part-id: oled
+      save-to: evidencias/ct05-apos-gole.png
+  - set-control: { part-id: refillSim, control: pressed, value: 1 }
+  - wait-serial: 'Reabastecimento de 200 ml simulado.'
+  - set-control: { part-id: refillSim, control: pressed, value: 0 }
+  - delay: 300ms
+  - wait-serial: 'volume=798ml temp=24.0C meta=200ml'

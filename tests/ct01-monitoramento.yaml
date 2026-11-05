@@ -1,0 +1,13 @@
+name: 'CT01 - UC01/UC04: inicia monitorando e mostra dados no OLED'
+version: 1
+author: 'Equipe AquaRemind'
+
+steps:
+  - wait-serial: 'Sistema iniciado em modo demonstracao.'
+  - wait-serial: 'estado=MONITORANDO distancia=4.1cm volume=798ml temp=24.0C meta=0ml'
+  - expect-pin: { part-id: led, pin: A, value: 0 }
+  - expect-pin: { part-id: vibration, pin: A, value: 0 }
+  - delay: 600ms
+  - take-screenshot:
+      part-id: oled
+      save-to: evidencias/ct01-monitorando.png
