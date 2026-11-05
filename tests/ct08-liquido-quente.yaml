@@ -1,0 +1,18 @@
+name: 'CT08 - UC05: liquido acima de 50 C gera aviso; repete so depois de esfriar'
+version: 1
+author: 'Equipe AquaRemind'
+
+steps:
+  - wait-serial: 'Sistema iniciado em modo demonstracao.'
+  - wait-serial: 'temp=24.0C'
+  - set-control: { part-id: temp, control: temperature, value: 55 }
+  - wait-serial: 'Cuidado: liquido acima de 50 C.'
+  - wait-serial: 'temp=55.0C'
+  - delay: 600ms
+  - take-screenshot:
+      part-id: oled
+      save-to: evidencias/ct08-liquido-quente.png
+  - set-control: { part-id: temp, control: temperature, value: 30 }
+  - wait-serial: 'temp=30.0C'
+  - set-control: { part-id: temp, control: temperature, value: 55 }
+  - wait-serial: 'Cuidado: liquido acima de 50 C.'

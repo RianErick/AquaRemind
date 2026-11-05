@@ -1,0 +1,29 @@
+name: 'CT06 - UC03/UC06: lembrete apos 30 min (30 s no modo demo) com LED, vibracao e Serial'
+version: 1
+author: 'Equipe AquaRemind'
+
+# O alerta pulsa em fase com millis() % 2000: ligado em 0-220, 360-580 e 720-940 ms.
+# Usa so `delay` a partir do boot porque `wait-serial` tem atraso variavel e tiraria
+# a amostragem de fase. O lembrete sai perto de t = 31 s.
+steps:
+  - delay: 20100ms
+  - expect-pin: { part-id: led, pin: A, value: 0 }
+  - expect-pin: { part-id: vibration, pin: A, value: 0 }
+  - delay: 12000ms
+  - expect-pin: { part-id: led, pin: A, value: 1 }
+  - expect-pin: { part-id: vibration, pin: A, value: 1 }
+  - delay: 200ms
+  - expect-pin: { part-id: led, pin: A, value: 0 }
+  - expect-pin: { part-id: vibration, pin: A, value: 0 }
+  - delay: 200ms
+  - expect-pin: { part-id: led, pin: A, value: 1 }
+  - delay: 150ms
+  - expect-pin: { part-id: led, pin: A, value: 0 }
+  - delay: 150ms
+  - expect-pin: { part-id: led, pin: A, value: 1 }
+  - delay: 300ms
+  - expect-pin: { part-id: led, pin: A, value: 0 }
+  - wait-serial: 'estado=LEMBRETE'
+  - take-screenshot:
+      part-id: oled
+      save-to: evidencias/ct06-lembrete.png

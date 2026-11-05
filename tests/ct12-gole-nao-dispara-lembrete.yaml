@@ -1,0 +1,13 @@
+name: 'CT12 - UC02/UC03: gole pelo sensor reinicia o tempo e nao dispara lembrete'
+version: 1
+author: 'Equipe AquaRemind'
+
+# A saida esperada apos o gole e GOLE/MONITORANDO. Se aparecer LEMBRETE, a linha
+# abaixo nunca casa e o cenario falha por tempo limite.
+steps:
+  - wait-serial: 'Sistema iniciado em modo demonstracao.'
+  - wait-serial: 'meta=0ml'
+  - set-control: { part-id: sonar, control: distance, value: 8 }
+  - wait-serial: 'Gole detectado; temporizador reiniciado.'
+  - delay: 2500ms
+  - wait-serial: 'estado=MONITORANDO distancia=8.3cm volume=590ml temp=24.0C meta=208ml'

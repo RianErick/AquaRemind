@@ -1,0 +1,99 @@
+name: 'CT11 - UC04: meta diaria para em 2000 ml mesmo com mais goles'
+version: 1
+author: 'Equipe AquaRemind'
+
+steps:
+  - wait-serial: 'Sistema iniciado em modo demonstracao.'
+  - wait-serial: 'estado=MONITORANDO'
+  - set-control: { part-id: drinkSim, control: pressed, value: 1 }
+  - wait-serial: 'Gole detectado'
+  - set-control: { part-id: drinkSim, control: pressed, value: 0 }
+  - delay: 300ms
+  - set-control: { part-id: refillSim, control: pressed, value: 1 }
+  - wait-serial: 'Reabastecimento de 200 ml simulado.'
+  - set-control: { part-id: refillSim, control: pressed, value: 0 }
+  - delay: 300ms
+  - set-control: { part-id: drinkSim, control: pressed, value: 1 }
+  - wait-serial: 'Gole detectado'
+  - set-control: { part-id: drinkSim, control: pressed, value: 0 }
+  - delay: 300ms
+  - set-control: { part-id: refillSim, control: pressed, value: 1 }
+  - wait-serial: 'Reabastecimento de 200 ml simulado.'
+  - set-control: { part-id: refillSim, control: pressed, value: 0 }
+  - delay: 300ms
+  - set-control: { part-id: drinkSim, control: pressed, value: 1 }
+  - wait-serial: 'Gole detectado'
+  - set-control: { part-id: drinkSim, control: pressed, value: 0 }
+  - delay: 300ms
+  - set-control: { part-id: refillSim, control: pressed, value: 1 }
+  - wait-serial: 'Reabastecimento de 200 ml simulado.'
+  - set-control: { part-id: refillSim, control: pressed, value: 0 }
+  - delay: 300ms
+  - set-control: { part-id: drinkSim, control: pressed, value: 1 }
+  - wait-serial: 'Gole detectado'
+  - set-control: { part-id: drinkSim, control: pressed, value: 0 }
+  - delay: 300ms
+  - set-control: { part-id: refillSim, control: pressed, value: 1 }
+  - wait-serial: 'Reabastecimento de 200 ml simulado.'
+  - set-control: { part-id: refillSim, control: pressed, value: 0 }
+  - delay: 300ms
+  - set-control: { part-id: drinkSim, control: pressed, value: 1 }
+  - wait-serial: 'Gole detectado'
+  - set-control: { part-id: drinkSim, control: pressed, value: 0 }
+  - delay: 300ms
+  - set-control: { part-id: refillSim, control: pressed, value: 1 }
+  - wait-serial: 'Reabastecimento de 200 ml simulado.'
+  - set-control: { part-id: refillSim, control: pressed, value: 0 }
+  - delay: 300ms
+  - set-control: { part-id: drinkSim, control: pressed, value: 1 }
+  - wait-serial: 'Gole detectado'
+  - set-control: { part-id: drinkSim, control: pressed, value: 0 }
+  - delay: 300ms
+  - set-control: { part-id: refillSim, control: pressed, value: 1 }
+  - wait-serial: 'Reabastecimento de 200 ml simulado.'
+  - set-control: { part-id: refillSim, control: pressed, value: 0 }
+  - delay: 300ms
+  - set-control: { part-id: drinkSim, control: pressed, value: 1 }
+  - wait-serial: 'Gole detectado'
+  - set-control: { part-id: drinkSim, control: pressed, value: 0 }
+  - delay: 300ms
+  - set-control: { part-id: refillSim, control: pressed, value: 1 }
+  - wait-serial: 'Reabastecimento de 200 ml simulado.'
+  - set-control: { part-id: refillSim, control: pressed, value: 0 }
+  - delay: 300ms
+  - set-control: { part-id: drinkSim, control: pressed, value: 1 }
+  - wait-serial: 'Gole detectado'
+  - set-control: { part-id: drinkSim, control: pressed, value: 0 }
+  - delay: 300ms
+  - set-control: { part-id: refillSim, control: pressed, value: 1 }
+  - wait-serial: 'Reabastecimento de 200 ml simulado.'
+  - set-control: { part-id: refillSim, control: pressed, value: 0 }
+  - delay: 300ms
+  - set-control: { part-id: drinkSim, control: pressed, value: 1 }
+  - wait-serial: 'Gole detectado'
+  - set-control: { part-id: drinkSim, control: pressed, value: 0 }
+  - delay: 300ms
+  - set-control: { part-id: refillSim, control: pressed, value: 1 }
+  - wait-serial: 'Reabastecimento de 200 ml simulado.'
+  - set-control: { part-id: refillSim, control: pressed, value: 0 }
+  - delay: 300ms
+  - set-control: { part-id: drinkSim, control: pressed, value: 1 }
+  - wait-serial: 'Gole detectado'
+  - set-control: { part-id: drinkSim, control: pressed, value: 0 }
+  - delay: 300ms
+  - set-control: { part-id: refillSim, control: pressed, value: 1 }
+  - wait-serial: 'Reabastecimento de 200 ml simulado.'
+  - set-control: { part-id: refillSim, control: pressed, value: 0 }
+  - delay: 300ms
+  - set-control: { part-id: drinkSim, control: pressed, value: 1 }
+  - wait-serial: 'Gole detectado'
+  - set-control: { part-id: drinkSim, control: pressed, value: 0 }
+  - delay: 300ms
+  - set-control: { part-id: refillSim, control: pressed, value: 1 }
+  - wait-serial: 'Reabastecimento de 200 ml simulado.'
+  - set-control: { part-id: refillSim, control: pressed, value: 0 }
+  - delay: 300ms
+  - wait-serial: 'meta=2000ml'
+  - take-screenshot:
+      part-id: oled
+      save-to: evidencias/ct11-meta.png

@@ -73,13 +73,14 @@ src/
 └── AquaRemindApp.cpp  # regras, botões e máquina de estados
 ```
 
-No Wokwi, os componentes estão agrupados em sensores, controle central, alertas/interface e controles de demonstração. Os fios seguem corredores externos para não encobrir o LED nem os demais componentes.
+No Wokwi, o ESP32 fica no centro, com display e sensores à direita, alertas ao lado esquerdo e controles de demonstração na extrema esquerda. Nenhum fio passa por cima dos componentes, e os fios do OLED chegam por cima, onde ficam os pinos, sem cobrir a tela.
 
 ## Comandos úteis
 
 ```bash
 ./scripts/build.sh       # compila
 ./scripts/upload.sh      # grava em um ESP32 conectado por USB
+./scripts/test-wokwi.sh  # roda os cenários de teste no Wokwi
 ./scripts/export-3d.sh   # exporta os STLs com OpenSCAD local ou Docker
 ```
 
