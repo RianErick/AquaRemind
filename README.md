@@ -12,6 +12,22 @@ Para abrir a demonstração interativa da garrafa, execute:
 
 O painel permite simular goles de 200 ml, reabastecimento, intervalos de 30/40/60 minutos, avanço do tempo, soneca, temperatura e a meta diária de 2 litros. O modo apresentação acelera o relógio para que cada segundo represente um minuto.
 
+## Protótipo 3D operacional
+
+```bash
+./simular.sh 3d
+```
+
+Abre a garrafa em 3D no navegador, com todo o equipamento dentro da tampa (HC-SR04 por baixo, ESP32 e motor no meio, OLED, botão e LED no topo), rodando uma porta em JavaScript do firmware (`simulador/3d/js/firmware.js`) com os mesmos limiares, tempos e mensagens do ESP32. Não precisa de internet: o three.js está em `simulador/3d/vendor/`.
+
+- **Beber / Encher** (segurar) ou **Gole 200 ml / +200 ml**: a tampa abre, o nível muda e o gole só é contado quando a tampa fecha e o HC-SR04 mede a diferença. Um toque rápido em Beber dá um gole de 15 ml, abaixo do limiar de 30 ml.
+- **Botão do dispositivo**, também clicável no topo da tampa: clique curto no lembrete ativa a soneca; segurar 1,2 s confirma o consumo.
+- **Lembrete**: intervalo de 30, 40 ou 60 min, com `DEMO_MODE` (1 min = 1 s) ligado por padrão. O LED e o motor pulsam três vezes a cada 2 s.
+- **Temperatura**: acima de 50 °C o OLED mostra `!` e o aviso é enviado.
+- **Vistas**: geral, display, sensor e explodida, esta com os componentes e a pinagem.
+
+As notificações da aba Celular são uma simulação: no firmware, `notify()` ainda escreve apenas no Monitor Serial.
+
 ## O que já está implementado
 
 - leitura do HC-SR04 com mediana de cinco amostras;

@@ -4,10 +4,12 @@ set -euo pipefail
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PORT="${AQUAREMIND_PORT:-8787}"
 URL="http://127.0.0.1:$PORT"
+# "./simular.sh 3d" abre o protótipo 3D; sem argumento, abre o painel 2D.
+PAGE="$URL/${1:+$1/}"
 
 if curl -fsS "$URL" >/dev/null 2>&1; then
-  xdg-open "$URL" >/dev/null 2>&1 &
-  echo "Simulador aberto em $URL"
+  xdg-open "$PAGE" >/dev/null 2>&1 &
+  echo "Simulador aberto em $PAGE"
   exit 0
 fi
 
@@ -19,8 +21,8 @@ echo "$SERVER_PID" > /tmp/aquaremind-simulador.pid
 
 for _ in {1..30}; do
   if curl -fsS "$URL" >/dev/null 2>&1; then
-    xdg-open "$URL" >/dev/null 2>&1 &
-    echo "Simulador aberto em $URL"
+    xdg-open "$PAGE" >/dev/null 2>&1 &
+    echo "Simulador aberto em $PAGE"
     exit 0
   fi
   sleep 0.2

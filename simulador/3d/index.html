@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AquaRemind 3D</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="importmap">
+    { "imports": { "three": "./vendor/three.module.js", "three/addons/": "./vendor/addons/" } }
+  </script>
+</head>
+<body>
+  <div id="stage" aria-label="Protótipo 3D da garrafa AquaRemind"></div>
+  <div id="labels" aria-hidden="true"></div>
+
+  <header class="brand">
+    <p class="eyebrow">PROTÓTIPO 3D OPERACIONAL · ESP32</p>
+    <h1>AquaRemind</h1>
+    <p class="hint">Arraste para girar · role para aproximar · o botão da tampa é clicável</p>
+  </header>
+
+  <nav class="viewbar segmented" id="views" aria-label="Vista da câmera">
+    <button type="button" data-view="geral" class="active">Geral</button>
+    <button type="button" data-view="display">Display</button>
+    <button type="button" data-view="sensor">Sensor</button>
+    <button type="button" data-view="explodida">Explodida</button>
+  </nav>
+
+  <aside class="panel left" aria-label="Estado do dispositivo">
+    <div class="state-row">
+      <span id="state" class="state">MONITORANDO</span>
+      <span class="io"><i id="io-led"></i>LED</span>
+      <span class="io"><i id="io-motor"></i>Motor</span>
+    </div>
+    <canvas id="oled" class="oled" aria-label="Display OLED ao vivo"></canvas>
+    <p class="caption">Display OLED 128×64, ao vivo</p>
+
+    <dl class="metrics">
+      <div><dt>Volume medido</dt><dd><b id="m-volume">0</b> ml</dd></div>
+      <div><dt>Temperatura</dt><dd><b id="m-temp">24,0</b> °C</dd></div>
+      <div><dt id="m-next-label">Próximo lembrete</dt><dd><b id="m-next">30</b> <span id="m-next-unit">min</span></dd></div>
+      <div><dt>Sensor de nível</dt><dd id="m-sensor" class="small">lendo</dd></div>
+    </dl>
+
+    <div class="goal">
+      <div class="goal-head"><span>Meta diária</span><span><b id="m-consumed">0</b> / 2000 ml</span></div>
+      <div class="bar"><i id="goal-bar"></i></div>
+      <button id="reset-day" class="link" type="button">Zerar a meta (novo dia)</button>
+    </div>
+  </aside>
+
+  <aside class="panel right" aria-label="Notificações e monitor serial">
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="phone" role="tab" type="button">Celular</button>
+      <button class="tab" data-tab="serial" role="tab" type="button">Monitor serial</button>
+    </div>
+    <div id="tab-phone" class="tab-body">
+      <p class="caption">Simulação das notificações enviadas pelo dispositivo</p>
+      <ul id="phone" class="phone"></ul>
+    </div>
+    <div id="tab-serial" class="tab-body" hidden>
+      <p class="caption">Saída do firmware, 115200 baud</p>
+      <pre id="serial" class="serial"></pre>
+    </div>
+  </aside>
+
+  <footer class="dock" aria-label="Controles">
+    <section>
+      <h2>Garrafa</h2>
+      <div class="row">
+        <button id="drink-hold" class="btn primary" type="button">Beber <small>segure</small></button>
+        <button id="drink-200" class="btn" type="button">Gole 200 ml</button>
+        <button id="refill-hold" class="btn" type="button">Encher <small>segure</small></button>
+        <button id="refill-200" class="btn" type="button">+200 ml</button>
+      </div>
+    </section>
+    <section>
+      <h2>Botão do dispositivo</h2>
+      <div class="row">
+        <button id="device-button" class="btn device" type="button"><i id="hold-progress"></i><span>Clique: soneca · 1,2 s: confirmar</span></button>
+      </div>
+    </section>
+    <section>
+      <h2>Lembrete</h2>
+      <div class="row">
+        <div class="segmented" id="interval">
+          <button type="button" data-minutes="30" class="active">30</button>
+          <button type="button" data-minutes="40">40</button>
+          <button type="button" data-minutes="60">60</button>
+        </div>
+        <button id="skip" class="btn" type="button">Avançar 5 min</button>
+        <label class="check"><input id="demo" type="checkbox" checked><span>Demo (1 min = 1 s)</span></label>
+      </div>
+    </section>
+    <section>
+      <h2>Temperatura do líquido <output id="temp-out">24 °C</output></h2>
+      <div class="row"><input id="temp" type="range" min="2" max="70" value="24" aria-label="Temperatura do líquido"></div>
+    </section>
+    <section>
+      <h2>Efeitos</h2>
+      <div class="row">
+        <label class="check"><input id="pulses" type="checkbox" checked><span>Ultrassom</span></label>
+        <label class="check"><input id="rotate" type="checkbox"><span>Girar</span></label>
+        <label class="check"><input id="sound" type="checkbox"><span>Som</span></label>
+      </div>
+    </section>
+  </footer>
+
+  <div id="toast" class="toast" role="status"></div>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
