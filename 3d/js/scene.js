@@ -256,6 +256,14 @@ export function createScene(stage, labelLayer, oledCanvas) {
   for (const z of [-1.15, 1.15]) board.add(solid(new THREE.BoxGeometry(5.0, 0.4, 0.18), gold, 0, -0.22, z));
   const motor = solid(new THREE.CylinderGeometry(0.55, 0.55, 0.3, 28), steel, cx, 1.5, 2.35);
   capPivot.add(explodable(motor, 0, 1.9, 0));
+  // Bateria LiPo pequena (3,7 V) do lado oposto ao motor, ligada à placa por dois fios finos.
+  const battery = new THREE.Group(); battery.position.set(cx, 1.5, -2.15); capPivot.add(explodable(battery, 0, 1.9, 0));
+  battery.add(solid(new RoundedBoxGeometry(2.4, 0.32, 0.8, 2, 0.1), new THREE.MeshStandardMaterial({ color: 0xb8c4cc, roughness: 0.35, metalness: 0.7 }), 0, 0, 0));
+  battery.add(solid(new THREE.BoxGeometry(1.5, 0.02, 0.5), new THREE.MeshStandardMaterial({ color: 0x1d5f8a, roughness: 0.6 }), -0.2, 0.17, 0));
+  for (const [dx, color] of [[-0.1, 0xc0392b], [0.1, 0x111111]]) {
+    const wire = solid(new THREE.CylinderGeometry(0.035, 0.035, 0.6, 6), new THREE.MeshStandardMaterial({ color, roughness: 0.7 }), 0.9 + dx, 0.05, 0.6);
+    wire.rotation.x = Math.PI / 2; battery.add(wire);
+  }
 
   const housing = solid(new THREE.CylinderGeometry(3.42, 3.42, 1.7, 72, 1, true), wallMaterial, cx, 1.75, 0);
   housing.add(solid(new RoundedBoxGeometry(1.0, 0.36, 0.3, 2, 0.08), plasticDark, 0, -0.3, -3.36)); // porta USB
@@ -330,6 +338,7 @@ export function createScene(stage, labelLayer, oledCanvas) {
   addLabel(led, 'LED de alerta', 'GPIO26', 1, 16);
   addLabel(motor, 'Motor vibratório', 'GPIO27 · 3 pulsos', -1, -8);
   addLabel(board, 'ESP32', 'firmware AquaRemind', 1);
+  addLabel(battery, 'Bateria LiPo', '3,7 V · 500 mAh', 1, 66);
   addLabel(sonarBoard, 'HC-SR04', 'TRIG 5 · ECHO 18', -1, 30);
   const probeAnchor = new THREE.Object3D(); probeAnchor.position.set(1.9, 21.5, 0.47); bottle.add(probeAnchor);
   addLabel(probeAnchor, 'DS18B20', 'GPIO4 · sonda dentro da água', 1);
