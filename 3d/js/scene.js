@@ -110,7 +110,7 @@ export function createScene(stage, labelLayer, oledCanvas) {
   controls.autoRotateSpeed = 0.9;
 
   // ---------- Iluminação e palco ----------
-  scene.add(new THREE.HemisphereLight(0xbfefff, 0x06141a, 0.55));
+  const hemi = new THREE.HemisphereLight(0xbfefff, 0x06141a, 0.55); scene.add(hemi);
   const key = new THREE.DirectionalLight(0xffffff, 2.4);
   key.position.set(16, 42, 24); key.castShadow = true;
   key.shadow.mapSize.set(2048, 2048);
@@ -521,6 +521,14 @@ export function createScene(stage, labelLayer, oledCanvas) {
     setAutoRotate(on) { controls.autoRotate = on; },
     setInsetBottom(px) { if (px === insetBottom) return; insetBottom = px; resize(); setView(currentView, true); },
     setPulses(on) { state.showPulses = on; },
+    // Tema claro/escuro: o fundo vem do CSS; aqui só piso, pedestal e luz ambiente acompanham.
+    setTheme(light) {
+      floor.material.color.set(light ? 0xd3e2e6 : 0x0c2630);
+      pedestal.material.color.set(light ? 0xc4d6dc : 0x0b2028);
+      hemi.groundColor.set(light ? 0x9fb8bf : 0x06141a);
+      hemi.intensity = light ? 0.9 : 0.55;
+      renderer.toneMappingExposure = light ? 1.0 : 1.12;
+    },
     get rendererInfo() { return renderer.info.render; },
   };
 }

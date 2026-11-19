@@ -11,6 +11,18 @@
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   color-scheme: dark;
 }
+:root[data-theme="light"] {
+  --bg: #e9f1f3;
+  --panel: rgba(255, 255, 255, .84);
+  --line: rgba(10, 60, 72, .14);
+  --text: #0b2a33;
+  --muted: #5a747c;
+  --aqua: #0a9aab;
+  --lime: #6d8f10;
+  --warning: #c27510;
+  --danger: #e0473a;
+  color-scheme: light;
+}
 * { box-sizing: border-box; }
 html, body { height: 100%; }
 body {
@@ -135,3 +147,28 @@ input[type="range"] { width: 170px; accent-color: var(--aqua); }
   .toast { bottom: 24px; }
 }
 @media (prefers-reduced-motion: reduce) { .phone li { animation: none; } .bar i { transition: none; } }
+
+/* ---------- Botão e ajustes do tema claro ---------- */
+.theme-toggle {
+  position: absolute; left: 236px; top: 25px;
+  pointer-events: auto; display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px 6px 9px;
+  border-radius: 99px; border: 1px solid var(--line); background: var(--panel); backdrop-filter: blur(14px);
+  font-size: 11.5px; font-weight: 700; color: var(--text);
+}
+.theme-toggle::before { content: ""; width: 12px; height: 12px; border-radius: 50%; background: linear-gradient(90deg, #fff 50%, #0b2a33 50%); box-shadow: 0 0 0 1px var(--muted); }
+.theme-toggle:hover { border-color: var(--aqua); }
+:root[data-theme="light"] body {
+  background:
+    radial-gradient(ellipse 60% 55% at 50% 58%, #ffffff 0, transparent 70%),
+    radial-gradient(circle at 12% 0%, #d4e8ec 0, transparent 40%),
+    var(--bg);
+}
+:root[data-theme="light"] .panel, :root[data-theme="light"] .dock { box-shadow: 0 16px 44px rgba(20, 60, 70, .14); }
+:root[data-theme="light"] .tag span, :root[data-theme="light"] .toast { background: rgba(255, 255, 255, .92); }
+:root[data-theme="light"] .btn, :root[data-theme="light"] .segmented, :root[data-theme="light"] .tabs,
+:root[data-theme="light"] .phone li, :root[data-theme="light"] .bar { background: rgba(10, 50, 60, .06); }
+:root[data-theme="light"] .btn:hover { background: rgba(10, 50, 60, .11); }
+:root[data-theme="light"] .btn.primary { background: var(--aqua); color: #fff; }
+:root[data-theme="light"] .btn.primary:hover { background: #12b2c4; }
+:root[data-theme="light"] .io i { background: #c3d3d8; }
+:root[data-theme="light"] .state[data-mode="SONECA"] { background: rgba(10, 50, 60, .08); }

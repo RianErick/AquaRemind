@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AquaRemind 3D</title>
+  <script>try { if (localStorage.getItem('aquaremind-tema') === 'light') document.documentElement.dataset.theme = 'light'; } catch {}</script>
   <link rel="stylesheet" href="styles.css">
   <script type="importmap">
     { "imports": { "three": "./vendor/three.module.js", "three/addons/": "./vendor/addons/" } }
@@ -17,6 +18,7 @@
     <p class="eyebrow">PROTÓTIPO 3D OPERACIONAL · ESP32</p>
     <h1>AquaRemind</h1>
     <p class="hint">Arraste para girar · role para aproximar · o botão da tampa é clicável</p>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">Tema claro</button>
   </header>
 
   <nav class="viewbar segmented" id="views" aria-label="Vista da câmera">
