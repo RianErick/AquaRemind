@@ -14,6 +14,7 @@ class Hardware {
   void render(const Measurements &data, AppMode mode, uint32_t remainingMs, bool demo);
  private:
   float readDistanceOnceCm();
+  void drawMascot(bool eyesOpen);
   Adafruit_SSD1306 display_;
   OneWire oneWire_;
   DallasTemperature temperatureSensor_;

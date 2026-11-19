@@ -1,5 +1,5 @@
 // Display SSD1306 128x64 desenhado pixel a pixel com a fonte 5x7 clássica da Adafruit GFX.
-import { oledLines } from './firmware.js';
+import { oledLines, AppMode } from './firmware.js';
 
 // Colunas de cada caractere ASCII de 0x20 a 0x7E; bit 0 é a linha de cima.
 const FONT = (
@@ -16,6 +16,11 @@ const FONT = (
   + '7C14141408 081414187C 7C08040408 4854545420 043F444020 3C4040207C 1C2040201C 3C4030403C '
   + '4428102844 0C5050503C 4464544C44 0008364100 00007F0000 0041360800 0804081008'
 ).split(' ').map((hex) => hex.match(/../g).map((b) => parseInt(b, 16)));
+
+// Sprites 56x56 do mascote, idênticos a MASCOTE_A/MASCOTE_B de src/Hardware.cpp (1 bit, MSB primeiro).
+const hex = (str) => Uint8Array.from(str.match(/../g), (b) => parseInt(b, 16));
+const MASCOTE_A = hex('000000000000000000000000000000000008000000000000180000000000003C0000000000003E0000000000007E000000000000E7000000000000C3800000000001C380000000000381C0000000000300E000000000070060000000000E0070000000000C0030000000001C00180000000038001C0000000030000C0000000060000600000000E0000700000000C000030000000180000180000003800001C0000003000000C00000062000006000000EE000007000000D8000003800001B0000001800001A0000001C0000320000000C0000300000000C000030120048060000603700DC060000603F00FC060000603F00FC060000603F00FC060000601E007806000060000000060000600000000600006000000006000070000000060000308800008E0000300000000C0000382000003C0000180000001800001C0100C03800000E01818030000006007E0060000003000000E0000001C00001C0000000E000078000000078000F000000003E007C000000000FFFF00000000001FF80000000000000000000');
+const MASCOTE_B = hex('000000000000000000000000000000000008000000000000180000000000003C0000400000003E0000C00000007E0001E0000000E7000040000000C3800000020001C380000002000381C0000006000300E000001F80070060000002000E0070000002000C0030000000001C00180000000038001C0020000030000C0060000060000600F80000E0000700200000C000030020000180000180000003800001C0000003000000C00000062000006000000EE000007000000D8000003800001B0000001800001A0000001C0000320000000C0000300000000C0000301E0078060000603180C60600006040810206000060000000060000600000000600006000000006000060000000060000600000000600006000000006000070000000060000308800008E0000300000000C0000382000003C00001801FF801800001C01FF803800000E01FF80300000060081006000000300C100E0000001C00001C0000000E000078000000078000F000000003E007C000000000FFFF00000000001FF80000000000000000000');
 
 export const OLED_W = 128;
 export const OLED_H = 64;
@@ -35,16 +40,34 @@ export class Oled {
 
   set(x, y) { if (x >= 0 && x < OLED_W && y >= 0 && y < OLED_H) this.pixels[y * OLED_W + x] = 1; }
 
-  text(x, y, str) {
+  // `size` equivale a setTextSize da Adafruit GFX: cada ponto da fonte vira um bloco size x size.
+  text(x, y, str, size = 1) {
     for (const ch of str) {
       const glyph = FONT[ch.charCodeAt(0) - 32] ?? FONT[0];
-      for (let col = 0; col < 5; col++) for (let row = 0; row < 7; row++) if (glyph[col] >> row & 1) this.set(x + col, y + row);
-      x += 6;
+      for (let col = 0; col < 5; col++) for (let row = 0; row < 7; row++) {
+        if (!(glyph[col] >> row & 1)) continue;
+        for (let dy = 0; dy < size; dy++) for (let dx = 0; dx < size; dx++) this.set(x + col * size + dx, y + row * size + dy);
+      }
+      x += 6 * size;
     }
+  }
+
+  bitmap(x, y, data, w, h) {
+    const stride = Math.ceil(w / 8);
+    for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) if (data[j * stride + (i >> 3)] & (0x80 >> (i & 7))) this.set(x + i, y + j);
   }
 
   render(frame) {
     this.pixels.fill(0);
+    if (frame.mode === AppMode.REMINDER) {
+      // Hardware::render: mascote alterna de quadro a cada redesenho (500 ms) e só aparece no alarme.
+      this.eyesOpen = !(this.eyesOpen ?? true);
+      this.bitmap(4, this.eyesOpen ? 4 : 2, this.eyesOpen ? MASCOTE_A : MASCOTE_B, 56, 56);
+      this.text(66, 16, 'BEBA', 2);
+      this.text(66, 36, 'AGUA!', 2);
+      this.flush();
+      return;
+    }
     for (const line of oledLines(frame)) this.text(0, line.y, line.text);
     for (let x = 0; x < OLED_W; x++) this.set(x, 10);
     this.flush();
