@@ -15,7 +15,7 @@ export const Config = {
     SAMPLE_MS: 500,
     DISPLAY_MS: 500,
     SERIAL_MS: 2000,
-    LONG_PRESS_MS: 1200,
+    LONG_PRESS_MS: 1500,
     DEBOUNCE_MS: 35,
     DRINK_FEEDBACK_MS: 1500,
   },
@@ -41,6 +41,8 @@ export class AquaRemindApp {
     this.previousVolumeMl = -1;
     this.lastDrinkMs = 0;
     this.snoozeUntilMs = 0;
+    this.snoozeLocked = false;
+    this.pausedRemainingMs = 0;
     this.lastSampleMs = 0;
     this.lastDisplayMs = 0;
     this.lastSerialMs = 0;
@@ -78,6 +80,7 @@ export class AquaRemindApp {
   snoozeMs() { return this.demo ? 15 * 1000 : 15 * 60 * 1000; }
   reminderIntervalMs() { return this.configuredIntervalMinutes * (this.demo ? 1000 : 60 * 1000); }
   reminderRemainingMs(now) {
+    if (this.snoozeLocked) return this.pausedRemainingMs; // soneca manual: cronômetro congelado
     const elapsed = now - this.lastDrinkMs;
     return elapsed < this.reminderIntervalMs() ? this.reminderIntervalMs() - elapsed : 0;
   }
@@ -91,7 +94,8 @@ export class AquaRemindApp {
 
   registerDrink(amount, measured) {
     this.lastDrinkMs = this.hw.millis();
-    this.mode = AppMode.DRINK;
+    this.pausedRemainingMs = this.reminderIntervalMs();
+    if (!this.snoozeLocked) this.mode = AppMode.DRINK; // na soneca manual o gole conta, mas a pausa continua
     this.stopReminderOutputs();
     if (measured) {
       this.measurements.consumedTodayMl = Math.min(Config.Bottle.DAILY_GOAL_ML, this.measurements.consumedTodayMl + amount);
@@ -105,7 +109,18 @@ export class AquaRemindApp {
     if (now - this.lastButtonChangeMs < Config.Timing.DEBOUNCE_MS || reading === this.stableButton) return;
     this.stableButton = reading;
     if (this.stableButton === LOW) { this.buttonPressedAtMs = now; return; }
-    if (now - this.buttonPressedAtMs >= Config.Timing.LONG_PRESS_MS) this.registerDrink(0, false);
+    const longPress = now - this.buttonPressedAtMs >= Config.Timing.LONG_PRESS_MS;
+    if (this.snoozeLocked) { // qualquer toque desbloqueia e retoma a contagem
+      this.snoozeLocked = false;
+      this.mode = AppMode.MONITORING;
+      this.lastDrinkMs = now - (this.reminderIntervalMs() - this.pausedRemainingMs);
+      this.notify('Soneca desativada; contagem retomada.');
+    } else if (longPress && this.mode === AppMode.MONITORING) { // segurar 1,5 s: soneca até novo toque
+      this.pausedRemainingMs = this.reminderRemainingMs(now);
+      this.snoozeLocked = true;
+      this.mode = AppMode.SNOOZE;
+      this.notify('Soneca ativada; aperte o botao para retomar.');
+    } else if (longPress) this.registerDrink(0, false);
     else if (this.mode === AppMode.REMINDER) {
       this.mode = AppMode.SNOOZE;
       this.snoozeUntilMs = now + this.snoozeMs();
@@ -121,6 +136,7 @@ export class AquaRemindApp {
     this.configuredIntervalMinutes = selected;
     this.lastDrinkMs = now;
     this.mode = AppMode.MONITORING;
+    this.snoozeLocked = false;
     this.stopReminderOutputs();
     this.hw.serial(`[CONFIGURACAO] Novo intervalo: ${selected} minutos.`);
   }
@@ -145,6 +161,7 @@ export class AquaRemindApp {
   updateStateMachine(now) {
     if (this.mode === AppMode.DRINK && now - this.lastDrinkMs > Config.Timing.DRINK_FEEDBACK_MS) this.mode = AppMode.MONITORING;
     if (this.mode === AppMode.SNOOZE) {
+      if (this.snoozeLocked) return;
       if (now - this.snoozeUntilMs >= 0) {
         this.mode = AppMode.REMINDER;
         this.reminderOutputsEnabled = true;
@@ -178,6 +195,7 @@ export class AquaRemindApp {
     if (demo === this.demo) return;
     this.demo = demo;
     this.mode = AppMode.MONITORING;
+    this.snoozeLocked = false;
     this.stopReminderOutputs();
     this.lastDrinkMs = this.hw.millis();
     this.notify(demo ? 'Sistema iniciado em modo demonstracao.' : 'Sistema iniciado em modo real.');

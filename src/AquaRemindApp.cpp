@@ -21,6 +21,7 @@ uint32_t AquaRemindApp::reminderIntervalMs() const {
   return static_cast<uint32_t>(configuredIntervalMinutes_)*(DEMO_MODE ? 1000UL : 60UL*1000UL);
 }
 uint32_t AquaRemindApp::reminderRemainingMs(uint32_t now) const {
+  if (snoozeLocked_) return pausedRemainingMs_;            // soneca manual: cronometro congelado
   const uint32_t elapsed=now-lastDrinkMs_; return elapsed<reminderIntervalMs() ? reminderIntervalMs()-elapsed : 0;
 }
 float AquaRemindApp::distanceToVolumeMl(float distance) const {
@@ -28,7 +29,8 @@ float AquaRemindApp::distanceToVolumeMl(float distance) const {
   return PI*Config::Bottle::RADIUS_CM*Config::Bottle::RADIUS_CM*height;
 }
 void AquaRemindApp::registerDrink(float amount,bool measured) {
-  lastDrinkMs_=millis(); mode_=AppMode::DRINK; reminderOutputsEnabled_=false; hardware_.stopReminderOutputs();
+  lastDrinkMs_=millis(); pausedRemainingMs_=reminderIntervalMs();
+  if (!snoozeLocked_) mode_=AppMode::DRINK;                // na soneca manual o gole conta, mas a pausa continua reminderOutputsEnabled_=false; hardware_.stopReminderOutputs();
   if (measured) measurements_.consumedTodayMl=min(Config::Bottle::DAILY_GOAL_ML,measurements_.consumedTodayMl+amount);
   notify(measured ? "Gole detectado; temporizador reiniciado." : "Consumo confirmado pelo botao; temporizador reiniciado.");
 }
@@ -38,7 +40,15 @@ void AquaRemindApp::handleMainButton(uint32_t now) {
   if (now-lastButtonChangeMs_<Config::Timing::DEBOUNCE_MS || reading==stableButton_) return;
   stableButton_=reading;
   if (stableButton_==LOW) { buttonPressedAtMs_=now; return; }
-  if (now-buttonPressedAtMs_>=Config::Timing::LONG_PRESS_MS) registerDrink(0.0f,false);
+  const bool longPress=now-buttonPressedAtMs_>=Config::Timing::LONG_PRESS_MS;
+  if (snoozeLocked_) {                                     // qualquer toque desbloqueia e retoma a contagem
+    snoozeLocked_=false; mode_=AppMode::MONITORING;
+    lastDrinkMs_=now-(reminderIntervalMs()-pausedRemainingMs_);
+    notify("Soneca desativada; contagem retomada.");
+  } else if (longPress&&mode_==AppMode::MONITORING) {      // segurar 1,5 s monitorando: soneca ate novo toque
+    pausedRemainingMs_=reminderRemainingMs(now); snoozeLocked_=true; mode_=AppMode::SNOOZE;
+    notify("Soneca ativada; aperte o botao para retomar.");
+  } else if (longPress) registerDrink(0.0f,false);
   else if (mode_==AppMode::REMINDER) {
     mode_=AppMode::SNOOZE; snoozeUntilMs_=now+Config::Timing::SNOOZE_MS;
     reminderOutputsEnabled_=false; hardware_.stopReminderOutputs(); notify("Soneca ativada.");
@@ -66,7 +76,7 @@ void AquaRemindApp::selectReminderInterval(uint32_t now) {
   const int slider=analogRead(Config::Pins::SIMULATE_INTERVAL);
   const uint8_t selected=slider<1365 ? 30 : slider<2730 ? 40 : 60;
   if (selected==configuredIntervalMinutes_) return;
-  configuredIntervalMinutes_=selected; lastDrinkMs_=now; mode_=AppMode::MONITORING;
+  configuredIntervalMinutes_=selected; lastDrinkMs_=now; mode_=AppMode::MONITORING; snoozeLocked_=false;
   reminderOutputsEnabled_=false; hardware_.stopReminderOutputs();
   Serial.printf("[CONFIGURACAO] Novo intervalo: %u minutos.\n",configuredIntervalMinutes_);
 }
@@ -88,6 +98,7 @@ void AquaRemindApp::processMeasurements() {
 void AquaRemindApp::updateStateMachine(uint32_t now) {
   if (mode_==AppMode::DRINK&&now-lastDrinkMs_>Config::Timing::DRINK_FEEDBACK_MS) mode_=AppMode::MONITORING;
   if (mode_==AppMode::SNOOZE) {
+    if (snoozeLocked_) return;
     if (static_cast<int32_t>(now-snoozeUntilMs_)>=0) {
       mode_=AppMode::REMINDER; reminderOutputsEnabled_=true; notify("Soneca encerrada: hora de beber agua.");
     }

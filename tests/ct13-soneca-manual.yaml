@@ -1,0 +1,24 @@
+name: 'CT13 - UC07: segurar 1,5 s monitorando pausa o lembrete ate um novo toque'
+version: 1
+author: 'Equipe AquaRemind'
+
+# Sem a pausa, o lembrete sairia perto de t = 31 s. Ficando 40 s em soneca manual,
+# o cronometro nao anda; depois do toque ele retoma de onde parou.
+steps:
+  - wait-serial: 'Sistema iniciado em modo demonstracao.'
+  - delay: 5000ms
+  - set-control: { part-id: button, control: pressed, value: 1 }
+  - delay: 2000ms
+  - set-control: { part-id: button, control: pressed, value: 0 }
+  - wait-serial: 'Soneca ativada; aperte o botao para retomar.'
+  - wait-serial: 'estado=SONECA'
+  - delay: 40000ms
+  - expect-pin: { part-id: led, pin: A, value: 0 }
+  - expect-pin: { part-id: vibration, pin: A, value: 0 }
+  - wait-serial: 'estado=SONECA'
+  - set-control: { part-id: button, control: pressed, value: 1 }
+  - delay: 300ms
+  - set-control: { part-id: button, control: pressed, value: 0 }
+  - wait-serial: 'Soneca desativada; contagem retomada.'
+  - wait-serial: 'estado=MONITORANDO'
+  - wait-serial: 'Hora de beber agua.'

@@ -6,7 +6,7 @@ steps:
   - wait-serial: 'Sistema iniciado em modo demonstracao.'
   - wait-serial: 'Hora de beber agua.'
   - set-control: { part-id: button, control: pressed, value: 1 }
-  - delay: 1500ms
+  - delay: 2000ms
   - set-control: { part-id: button, control: pressed, value: 0 }
   - wait-serial: 'Consumo confirmado pelo botao; temporizador reiniciado.'
   - expect-pin: { part-id: vibration, pin: A, value: 0 }

@@ -70,6 +70,8 @@ function describe(message) {
     case 'Gole detectado; temporizador reiniciado.': return ['Gole registrado', `${fmt(m.consumedTodayMl)} de 2.000 ml hoje.`];
     case 'Consumo confirmado pelo botao; temporizador reiniciado.': return ['Consumo confirmado', 'Temporizador reiniciado pelo botão.'];
     case 'Soneca ativada.': return ['Soneca ativada', 'Novo lembrete em 15 min.'];
+    case 'Soneca ativada; aperte o botao para retomar.': return ['Soneca ativada', 'Lembretes pausados até apertar o botão.'];
+    case 'Soneca desativada; contagem retomada.': return ['Soneca desativada', `Próximo lembrete em ${Math.ceil(app.pausedRemainingMs / (app.demo ? 1000 : 60000))} min.`];
     case 'Soneca encerrada: hora de beber agua.': return ['Soneca encerrada', 'Hora de beber água.', 'warn'];
     case 'Reabastecimento detectado.': return ['Garrafa reabastecida', `Volume atual: ${fmt(m.volumeMl)} ml.`];
     case 'Cuidado: liquido acima de 50 C.': return ['Cuidado: líquido quente', 'Temperatura acima de 50 °C.', 'hot'];
@@ -228,6 +230,10 @@ const decimal = (n, digits) => n.toLocaleString('pt-BR', { minimumFractionDigits
 function timer(now) {
   const unit = app.demo ? 1000 : 60000;
   if (app.mode === AppMode.REMINDER) return { label: 'Lembrete ativo', value: 'agora', unit: '', fraction: 1 };
+  if (app.snoozeLocked) {
+    const left = app.pausedRemainingMs;
+    return { label: 'Pausado em', value: String(Math.ceil(left / unit)), unit: 'min', fraction: left / app.reminderIntervalMs() };
+  }
   if (app.mode === AppMode.SNOOZE) {
     const left = Math.max(0, app.snoozeUntilMs - now);
     return { label: 'Soneca termina em', value: String(Math.ceil(left / unit)), unit: 'min', fraction: left / app.snoozeMs() };

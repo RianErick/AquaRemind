@@ -23,9 +23,9 @@ class AquaRemindApp {
   Measurements measurements_;
   AppMode mode_=AppMode::MONITORING;
   float previousVolumeMl_=-1.0f, simulationVolumeMl_=0.0f;
-  bool simulationVolumeEnabled_=false, hotWarningSent_=false, reminderOutputsEnabled_=false;
+  bool snoozeLocked_=false, simulationVolumeEnabled_=false, hotWarningSent_=false, reminderOutputsEnabled_=false;
   uint8_t configuredIntervalMinutes_=30;
   bool lastSimDrink_=HIGH, lastSimRefill_=HIGH, rawButton_=HIGH, stableButton_=HIGH;
   uint32_t lastDrinkMs_=0, snoozeUntilMs_=0, lastSampleMs_=0, lastDisplayMs_=0;
-  uint32_t lastSerialMs_=0, lastIntervalReadMs_=0, lastButtonChangeMs_=0, buttonPressedAtMs_=0;
+  uint32_t pausedRemainingMs_=0, lastSerialMs_=0, lastIntervalReadMs_=0, lastButtonChangeMs_=0, buttonPressedAtMs_=0;
 };

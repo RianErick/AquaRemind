@@ -25,6 +25,7 @@ O script precisa de um token de CI do Wokwi, gerado em <https://wokwi.com/dashbo
 | CT10 | UC07 | Segurar o botão confirma o consumo e encerra o lembrete |
 | CT11 | UC04 | Meta diária para em 2000 ml |
 | CT12 | UC02, UC03 | Gole pelo sensor não dispara lembrete |
+| CT13 | UC07 | Segurar o botão 1,5 s em `MONITORANDO` pausa o cronômetro em `SONECA` até um novo toque |
 
 ## Roteiro de demonstração manual
 
@@ -52,7 +53,7 @@ Clique no DS18B20 e ajuste a temperatura acima de 50 °C. O OLED exibe `!` e o M
 
 ### T06 - Soneca e confirmação
 
-Durante o lembrete, dê um clique curto no botão para uma soneca de 15 segundos. Segure o botão por pelo menos 1,2 segundo para confirmar manualmente que bebeu e reiniciar o temporizador.
+Em `MONITORANDO`, segure o botão por 1,5 segundo: o sistema entra em `SONECA` e o cronômetro fica parado até você apertar o botão de novo, quando a contagem continua de onde parou. Durante o lembrete, um clique curto dá uma soneca de 15 segundos e segurar por 1,5 segundo confirma manualmente que bebeu e reinicia o temporizador.
 
 ## Observação para hardware físico
 
