@@ -25,6 +25,21 @@ const sceneOled = document.createElement('canvas');
 oled.attach(sceneOled, 4);
 oled.attach($('#oled'), 2);
 const scene = createScene($('#stage'), $('#labels'), sceneOled);
+
+// ---------- Tema claro/escuro (a escolha fica salva só neste navegador) ----------
+const themeButton = $('#theme-toggle');
+function applyTheme(light) {
+  document.documentElement.dataset.theme = light ? 'light' : 'dark';
+  themeButton.textContent = light ? 'Tema escuro' : 'Tema claro';
+  themeButton.setAttribute('aria-pressed', String(light));
+  scene.setTheme(light);
+}
+applyTheme(document.documentElement.dataset.theme === 'light');
+themeButton.addEventListener('click', () => {
+  const light = document.documentElement.dataset.theme !== 'light';
+  applyTheme(light);
+  try { localStorage.setItem('aquaremind-tema', light ? 'light' : 'dark'); } catch {}
+});
 // Em telas largas a barra de controles flutua sobre a cena; a câmera desconta essa faixa.
 const fitStage = () => {
   const dock = $('.dock'), floating = getComputedStyle(dock).position === 'fixed';
